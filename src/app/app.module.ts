@@ -18,6 +18,8 @@ import { AngularFireDatabaseModule } from '@angular/fire/database';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 
 import { AuthenticationService } from './services/authentication.service';
+import {UserService} from './services/user.service';
+import {Helpers} from './services/helpers.service';
 
 function logger(reducer: any) {
   return function (state: any, action: any) {
@@ -46,9 +48,9 @@ function logger(reducer: any) {
     StoreModule.forRoot(reducers, {
       runtimeChecks: {
         strictActionImmutability: true,
-        strictActionSerializability: true,
+        // strictActionSerializability: true,
         strictStateImmutability: true,
-        strictStateSerializability: true
+        // strictStateSerializability: true
       },
       metaReducers: [logger]
     }),
@@ -56,6 +58,8 @@ function logger(reducer: any) {
   ],
   providers: [
     AuthenticationService,
+    UserService,
+    Helpers
   ],
   declarations: [
     AppComponent,

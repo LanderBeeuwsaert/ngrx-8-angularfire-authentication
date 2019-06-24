@@ -14,7 +14,7 @@ export class AppComponent  {
     constructor(
       private store: Store<State>,
     ) {
-      this.store.dispatch(getAuthenticationData);
+      this.store.dispatch(getAuthenticationData());
     }
 }
 

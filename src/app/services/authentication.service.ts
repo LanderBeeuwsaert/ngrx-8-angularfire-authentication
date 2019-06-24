@@ -14,29 +14,31 @@ export class AuthenticationService {
 
   }
 
-  parseUser(authData: any): Partial<AuthenticationState> {
+  parseUserData(authData: any): AuthenticationState {
     // let email: string = authData.providerData.find((userInfo: UserInfo) => !!userInfo.email).email;
 
     return {
-
+      uid: authData.uid,
+      email: authData.email,
+      providerId: authData.providerData[0].providerId,
+      authDisplayName: authData.providerData[0].displayName
     }
-    /*  authData.uid,
-      authData.email, //authData.providerData[0].email,
-      authData.providerData[0].providerId,
-      authData.providerData[0].displayName,
+    /*
       authData.providerData[0].phoneNumber,
       authData.providerData[0].photoURL,
       //authData.emailVerified
-      true
-    );*/
+    */
   }
 
   signInWithGoogle(): Promise<any> {
     let provider = new auth.GoogleAuthProvider();
     // You can add additional scopes to the provider:
     provider.addScope('https://www.googleapis.com/auth/userinfo.email');
-    // console.log('gooooooglesignin');
     return auth().signInWithPopup(provider);
     // return auth().signInWithRedirect(provider);
+  }
+
+  async signOut(): Promise<void> {
+    await this.angularFireAuth.auth.signOut();
   }
 }

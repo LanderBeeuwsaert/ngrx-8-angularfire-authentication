@@ -1,3 +1,7 @@
+import { firestore } from 'firebase/app';
+import Timestamp = firestore.Timestamp;
+
+
 export interface AuthenticationState {
   uid: string;
   email: string;
@@ -6,4 +10,6 @@ export interface AuthenticationState {
   authDisplayName?: string;
 
   isLoggingOut?: boolean;
+
+  created_on?: Timestamp;
 }

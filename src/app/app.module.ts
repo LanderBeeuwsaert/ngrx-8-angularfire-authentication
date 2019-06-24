@@ -10,7 +10,7 @@ import { AuthenticationEffects } from './store/authentication';
 
 import { AppComponent } from './app.component';
 import { SimpleCounterComponent } from './containers/simple-counter/simple-counter.component';
-import { AuthControllerComponent } from './containers/auth-controller/auth-controller.component';
+import { TitlebarComponent } from './containers/titlebar/titlebar.component';
 import { LogMonitorComponent } from './containers/log-monitor/log-monitor.component';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
@@ -27,6 +27,8 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { ROUTES } from './app.routes';
 import {QuicklinkModule, QuicklinkStrategy} from 'ngx-quicklink';
 import {APP_BASE_HREF} from '@angular/common';
+import {AuthGuard} from './guards/auth-guard';
+import {UnauthGuard} from './guards/unauth-guard';
 
 function logger(reducer: any) {
   return function (state: any, action: any) {
@@ -74,12 +76,14 @@ function logger(reducer: any) {
     AuthenticationService,
     UserService,
     Helpers,
-    {provide: APP_BASE_HREF, useValue : '/' }
+    {provide: APP_BASE_HREF, useValue : '/' },
+    AuthGuard,
+    UnauthGuard
   ],
   declarations: [
     AppComponent,
     SimpleCounterComponent,
-    AuthControllerComponent,
+    TitlebarComponent,
     LogMonitorComponent,
     ItemListComponent,
     LoginComponent

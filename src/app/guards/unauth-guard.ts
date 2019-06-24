@@ -18,7 +18,7 @@ export class UnauthGuard implements CanActivate {
       map((authentication: AuthenticationState) => {
         if (!authentication.uid) return true;
         else {
-          this.router.navigate(['/home']);
+          this.router.navigate(['/items']);
           return false;
         }
       })

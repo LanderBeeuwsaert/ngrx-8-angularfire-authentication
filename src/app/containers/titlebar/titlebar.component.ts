@@ -6,19 +6,23 @@ import {AuthenticationState, googleLoginAttempt, logoutAttempt} from '../../stor
 import { AppState } from '../../store';
 import {filter} from 'rxjs/operators';
 import {untilDestroyed} from 'ngx-take-until-destroy';
+import {Router} from '@angular/router';
 //import { authentication } from '../../store/authentication';
 
 @Component({
   selector: 'auth-controller',
-  templateUrl: './auth-controller.component.html',
-  styleUrls: ['./auth-controller.component.css']
+  templateUrl: './titlebar.component.html',
+  styleUrls: ['./titlebar.component.css']
 })
-export class AuthControllerComponent {
+export class TitlebarComponent {
 //infoMessages$: Observable<string[]>;
 
   localAuthenticationString: string;
 
-  constructor(private store: Store<AppState>) {
+  constructor(
+    private store: Store<AppState>,
+    private router: Router
+    ) {
     //  this.infoMessages$ = this.store.pipe(select(infoMessage))
   }
 
@@ -32,16 +36,13 @@ export class AuthControllerComponent {
           this.localAuthenticationString = JSON.stringify(authentication);
         });
   }
-
-  login() {
-    this.store.dispatch(googleLoginAttempt());
-  }
-
   logout() {
     this.store.dispatch(logoutAttempt());
+
+    this.store.select('authentication').pipe(filter((authentication: AuthenticationState) => !authentication.isLoading), untilDestroyed(this)).subscribe((authentication: AuthenticationState) => {
+      this.router.navigate(['login']);
+    });
   }
 
-  ngOnDestroy() {
-
-  }
+  ngOnDestroy() {}
 }

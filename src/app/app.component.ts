@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 import { getAuthenticationData } from './store/authentication';
-import { State } from './store';
+import { AppState } from './store';
 
 @Component({
   selector: 'my-app',
@@ -12,7 +12,7 @@ export class AppComponent  {
   name = 'NgRx 8';
 
     constructor(
-      private store: Store<State>,
+      private store: Store<AppState>,
     ) {
       this.store.dispatch(getAuthenticationData());
     }

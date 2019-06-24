@@ -7,6 +7,10 @@ export interface AuthenticationState {
   email: string;
   providerId: string;
 
+  isLoading?: boolean;
+  errorCode?: string;
+  errorMessage?: string;
+
   authDisplayName?: string;
 
   isLoggingOut?: boolean;

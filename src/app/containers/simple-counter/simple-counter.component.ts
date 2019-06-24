@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Store, select } from '@ngrx/store';
 
-import { State } from '../../store';
+import { AppState } from '../../store';
 import { count, randomAdd, substract } from '../../store/counter';
 import { logInfo } from '../../store/logger';
 
@@ -14,7 +14,7 @@ import { logInfo } from '../../store/logger';
 export class SimpleCounterComponent {
   count$: Observable<number>;
 
-  constructor(private store: Store<State>) {
+  constructor(private store: Store<AppState>) {
     this.count$ = this.store.pipe(select(count))
   }
 

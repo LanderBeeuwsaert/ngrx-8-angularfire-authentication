@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { Store, select } from '@ngrx/store';
 import {AuthenticationState, googleLoginAttempt, logoutAttempt} from '../../store/authentication';
 
-import { State } from '../../store';
+import { AppState } from '../../store';
 import {filter} from 'rxjs/operators';
 import {untilDestroyed} from 'ngx-take-until-destroy';
 //import { authentication } from '../../store/authentication';
@@ -18,7 +18,7 @@ export class AuthControllerComponent {
 
   localAuthenticationString: string;
 
-  constructor(private store: Store<State>) {
+  constructor(private store: Store<AppState>) {
     //  this.infoMessages$ = this.store.pipe(select(infoMessage))
   }
 

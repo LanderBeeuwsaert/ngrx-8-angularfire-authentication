@@ -4,13 +4,13 @@ import { CounterState, counterReducer } from './counter';
 import { LoggerState, loggerReducer } from './logger';
 import { AuthenticationState, AuthenticationReducer } from './authentication';
 
-export interface State {
+export interface AppState {
   counter: CounterState,
   logger: LoggerState,
   authentication: AuthenticationState,
 }
 
-export const reducers: ActionReducerMap<State> = {
+export const reducers: ActionReducerMap<AppState> = {
   counter: counterReducer,
   logger: loggerReducer,
   authentication: AuthenticationReducer

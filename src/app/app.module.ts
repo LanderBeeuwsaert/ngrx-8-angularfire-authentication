@@ -20,6 +20,13 @@ import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AuthenticationService } from './services/authentication.service';
 import {UserService} from './services/user.service';
 import {Helpers} from './services/helpers.service';
+import { ItemListComponent } from './containers/item-list/item-list.component';
+import { LoginComponent } from './containers/login/login.component';
+import {RouterModule} from '@angular/router';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import { ROUTES } from './app.routes';
+import {QuicklinkModule, QuicklinkStrategy} from 'ngx-quicklink';
+import {APP_BASE_HREF} from '@angular/common';
 
 function logger(reducer: any) {
   return function (state: any, action: any) {
@@ -32,6 +39,13 @@ function logger(reducer: any) {
 
 @NgModule({
   imports: [
+    RouterModule.forRoot(ROUTES, {
+      useHash: false,
+      preloadingStrategy: QuicklinkStrategy
+      // enableTracing: true // <-- debugging purposes only
+    }),
+    BrowserAnimationsModule,
+    QuicklinkModule,
     AngularFireModule.initializeApp({
       apiKey: "AIzaSyBtNSer6W5aY4hCmY1M8F-Nc4q1q560HqA",
       authDomain: "tryout-fa97c.firebaseapp.com",
@@ -59,13 +73,16 @@ function logger(reducer: any) {
   providers: [
     AuthenticationService,
     UserService,
-    Helpers
+    Helpers,
+    {provide: APP_BASE_HREF, useValue : '/' }
   ],
   declarations: [
     AppComponent,
     SimpleCounterComponent,
     AuthControllerComponent,
-    LogMonitorComponent
+    LogMonitorComponent,
+    ItemListComponent,
+    LoginComponent
   ],
   bootstrap: [AppComponent]
 })

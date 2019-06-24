@@ -14,7 +14,7 @@ export class AuthenticationService {
 
   }
 
-  parseUserData(authData: any): AuthenticationState {
+  parseUserData(authData: any): Partial<AuthenticationState> {
     // let email: string = authData.providerData.find((userInfo: UserInfo) => !!userInfo.email).email;
 
     return {

@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Store, select } from '@ngrx/store';
 
-import { State } from '../../store';
+import { AppState } from '../../store';
 import { infoMessage } from '../../store/logger';
 
 @Component({
@@ -13,7 +13,7 @@ import { infoMessage } from '../../store/logger';
 export class LogMonitorComponent {
 infoMessages$: Observable<string[]>;
 
-  constructor(private store: Store<State>) {
+  constructor(private store: Store<AppState>) {
     this.infoMessages$ = this.store.pipe(select(infoMessage))
   }
 }

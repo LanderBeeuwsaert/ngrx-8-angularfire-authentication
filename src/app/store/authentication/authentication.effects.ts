@@ -16,8 +16,8 @@ import {AngularFireAuth} from '@angular/fire/auth';
 
 import {AuthenticationService} from '../../services/authentication.service';
 import {Store} from '@ngrx/store';
-import {State} from '../index';
 import {UserService} from '../../services/user.service';
+import {AppState} from '../index';
 
 @Injectable()
 export class AuthenticationEffects {
@@ -34,7 +34,7 @@ export class AuthenticationEffects {
           map((authData: AuthenticationState) => {
             if (authData) {
               /// User logged in
-              const parsedAuthData: AuthenticationState = this.authenticationService.parseUserData(authData);
+              const parsedAuthData: Partial<AuthenticationState> = this.authenticationService.parseUserData(authData);
               return authenticationDataRetrieved({payload: parsedAuthData});
             } else {
               /// User not logged in
@@ -147,7 +147,7 @@ export class AuthenticationEffects {
     private actions: Actions,
     private afAuth: AngularFireAuth,
     private authenticationService: AuthenticationService,
-    private store: Store<State>,
+    private store: Store<AppState>,
     private userService: UserService
   ) { }
 }

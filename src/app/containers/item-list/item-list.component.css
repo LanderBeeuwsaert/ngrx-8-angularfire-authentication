@@ -1,0 +1,6 @@
+:host {
+    display: grid;
+    place-items: center;
+    color: white;
+    flex-grow: 1;
+}

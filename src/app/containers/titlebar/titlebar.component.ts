@@ -10,7 +10,7 @@ import {Router} from '@angular/router';
 //import { authentication } from '../../store/authentication';
 
 @Component({
-  selector: 'auth-controller',
+  selector: 'titlebar',
   templateUrl: './titlebar.component.html',
   styleUrls: ['./titlebar.component.css']
 })

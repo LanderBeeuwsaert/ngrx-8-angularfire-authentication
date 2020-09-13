@@ -35,6 +35,7 @@ export class AuthenticationEffects {
             if (authData) {
               /// User logged in
               const parsedAuthData: Partial<AuthenticationState> = this.authenticationService.parseUserData(authData);
+                this.userService.connectUser(authData.email);
               return authenticationDataRetrieved({payload: parsedAuthData});
             } else {
               /// User not logged in
@@ -69,42 +70,42 @@ export class AuthenticationEffects {
   );
 
 
-  connectToUser = createEffect(
-    () => this.actions.pipe(
-      ofType(authenticationDataRetrieved),
-      withLatestFrom(this.store.select('authentication')),
-      mergeMap(([action, lastAuthentication]) =>
-
-        this.userService.loadUser(lastAuthentication.email).pipe(
-
-          map((connectedUser: Partial<AuthenticationState>) => {
-            // console.log('loadedUser', loadedUser);
-            if (connectedUser.created_on) {
-              return userDataRetrieved({payload: connectedUser});
-            } else {
-              return createNewUser({payload: {email: lastAuthentication.email}});
-            }
-          }),
-          catchError(err => {
-            let errorAuthentication: AuthenticationState = null;
-            this.store
-              .select('authentication')
-              .pipe(take(1))
-              .subscribe(user => (errorAuthentication = user));
-            if (errorAuthentication && errorAuthentication.isLoggingOut) {
-              console.log('LOGOUT INSUFFICIENT PERMISSIONS USER IGNORED ERROR: ', err);
-              return of(authenticationError({ errorMessage: err.message, errorCode: err.code }));
-            } else {
-              console.log('LOADUSER ERROR: ', err);
-              return of(authenticationError({ errorMessage: err.message, errorCode: err.code }));
-            }
-          }),
-          catchError(err => of(authenticationError({ errorMessage: err.message, errorCode: err.code })))
-        )
-      )
-    )
-    // , { dispatch: false }
-  );
+  // connectToUser = createEffect(
+  //   () => this.actions.pipe(
+  //     ofType(authenticationDataRetrieved),
+  //     withLatestFrom(this.store.select('authentication')),
+  //     mergeMap(([action, lastAuthentication]) =>
+  //
+  //       this.userService.loadUser(lastAuthentication.email).pipe(
+  //
+  //         map((connectedUser: Partial<AuthenticationState>) => {
+  //           // console.log('loadedUser', loadedUser);
+  //           if (connectedUser.created_on) {
+  //             return userDataRetrieved({payload: connectedUser});
+  //           } else {
+  //             return createNewUser({payload: {email: lastAuthentication.email}});
+  //           }
+  //         }),
+  //         catchError(err => {
+  //           let errorAuthentication: AuthenticationState = null;
+  //           this.store
+  //             .select('authentication')
+  //             .pipe(take(1))
+  //             .subscribe(user => (errorAuthentication = user));
+  //           if (errorAuthentication && errorAuthentication.isLoggingOut) {
+  //             console.log('LOGOUT INSUFFICIENT PERMISSIONS USER IGNORED ERROR: ', err);
+  //             return of(authenticationError({ errorMessage: err.message, errorCode: err.code }));
+  //           } else {
+  //             console.log('LOADUSER ERROR: ', err);
+  //             return of(authenticationError({ errorMessage: err.message, errorCode: err.code }));
+  //           }
+  //         }),
+  //         catchError(err => of(authenticationError({ errorMessage: err.message, errorCode: err.code })))
+  //       )
+  //     )
+  //   )
+  //   // , { dispatch: false }
+  // );
 
 
 
@@ -130,17 +131,20 @@ export class AuthenticationEffects {
   logout = createEffect(() => this.actions.pipe(
     ofType(logoutAttempt),
     switchMap((payload: any) =>
+    {
+this.userService.cancelSubscriptions();
+return        of(this.authenticationService.signOut()).pipe(
+            delay(500), //magical number seems to be between 210 and 250 ms, taking 500 for safety
+            map(authData => {
+                return logoutSuccess();
+            }),
+            // map(authData => {
+            //     return AcUserActions.logoutDelayFinished();
+            // }),
+            // catchError(err => of(AcUserActions.authError({ errorMessage: err.message, errorCode: err.code })))
+        )
+    }
       // of(this.afAuth.auth.signOut()).pipe(
-      of(this.authenticationService.signOut()).pipe(
-        delay(500), //magical number seems to be between 210 and 250 ms, taking 500 for safety
-        map(authData => {
-          return logoutSuccess();
-        }),
-        // map(authData => {
-        //     return AcUserActions.logoutDelayFinished();
-        // }),
-        // catchError(err => of(AcUserActions.authError({ errorMessage: err.message, errorCode: err.code })))
-      )
     )
   ));
 

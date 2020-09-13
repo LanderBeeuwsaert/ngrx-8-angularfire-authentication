@@ -1,11 +1,13 @@
 import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs';
-import {AuthenticationState} from '../store/authentication';
+import { Observable, of, Subscription } from 'rxjs';
+import { AuthenticationState, userDataRetrieved } from '../store/authentication';
 import {AngularFirestore} from '@angular/fire/firestore';
 import {map} from 'rxjs/operators';
 import {Helpers} from './helpers.service';
 import { firestore } from 'firebase/app';
 import Timestamp = firestore.Timestamp;
+import { AppState } from '../store';
+import { Store } from '@ngrx/store';
 
 @Injectable()
 export class UserService {
@@ -15,12 +17,31 @@ export class UserService {
       private afs: AngularFirestore,
       // private fsService: FirestoreService,
       // private angularFireAuth: AngularFireAuth,
-      // private store: Store<AppState>,
+      private store: Store<AppState>,
     ) {}
 
-    loadUser(userEmail: string): Observable<Partial<AuthenticationState>> {
+    subscription: Subscription;
+
+    connectUser(userEmail: string) {
         let userDocRef = this.afs.doc('users/' + userEmail);
-        return userDocRef.snapshotChanges().pipe(map(this.helpers.fsTransDoc));
+        console.log("CONNECTING USER");
+        this.subscription = userDocRef.snapshotChanges().pipe(map(this.helpers.fsTransDoc)).subscribe((authState:Partial<AuthenticationState> ) => {
+
+                      if (authState.created_on) {
+                          this.store.dispatch(userDataRetrieved({payload: authState}));
+                        // return userDataRetrieved({payload: connectedUser});
+                      } else {
+                        // return createNewUser({payload: {email: lastAuthentication.email}});
+                        // this.store.dispatch();
+                      }
+            // userDataRetrieved({payload: connectedUser})
+            // this.store.dispatch(new Training.SetAvailableTrainings(exercises));
+        });
+
+    }
+
+    cancelSubscriptions() {
+        this.subscription.unsubscribe();
     }
 
     async setupNewUser(userEmail: string): Promise<void> {
